@@ -10,6 +10,21 @@ echo "Instalando y configurando Mosquitto..."
 sudo apt update
 sudo apt install mosquitto mosquitto-clients -y
 
+# Verificar instalación
+if ! command -v mosquitto &> /dev/null; then
+  echo "Error: Mosquitto no se instaló correctamente."
+  exit 1
+fi
+# Verificar servicio Mosquitto
+if ! systemctl is-enabled mosquitto &> /dev/null; then
+  echo "Advertencia: El servicio Mosquitto no está habilitado. Intentando habilitarlo..."
+  sudo systemctl enable mosquitto
+  if [ $? -ne 0 ]; then
+    echo "Error: No se pudo habilitar el servicio Mosquitto."
+    exit 1
+  fi
+  echo "Servicio Mosquitto habilitado correctamente."
+fi
 # 1. Obtener credenciales de EC2
 source ./instance_role.sh
 
@@ -20,10 +35,10 @@ SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id "$1" --query 'Sec
 source ./elevated_role.sh "$1"
 
 # 4. Escribir configuracion de mosquitto
-local mqttconf $(./mqtt_update_conf_sub.sh "$SECRET_VALUE")
+./mqtt_update_conf_sub.sh "$SECRET_VALUE"
 
 # 6. Escribir contraseñas de Mosquitto
-local mqttpass $(./mqtt_update_pass_sub.sh "$SECRET_VALUE")
+./mqtt_update_pass_sub.sh "$SECRET_VALUE"
 
 # 7. Reiniciar Mosquitto
 sudo systemctl restart mosquitto

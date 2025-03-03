@@ -5,6 +5,12 @@ exit 1
 fi
 echo "Configurando CRON..."
 
+# Verificar si el script de limpieza existe
+if [ ! -f "./clean_mqtt_logs.sh" ]; then
+  echo "Error: El script clean_mqtt_logs.sh no existe en la carpeta actual."
+  exit 1
+fi
+
 # 1. Obtener credenciales de EC2
 source ./instance_role.sh
 

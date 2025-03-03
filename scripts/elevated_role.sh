@@ -12,4 +12,10 @@ ELEVATED_CREDENTIALS=$(aws sts assume-role --role-arn "$ELEVATED_ROLE" --role-se
 export AWS_ACCESS_KEY_ID=$(jq -r '.Credentials.AccessKeyId' <<< "$ELEVATED_CREDENTIALS")
 export AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' <<< "$ELEVATED_CREDENTIALS")
 export AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' <<< "$ELEVATED_CREDENTIALS")
+
+if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ] || [ -z "$AWS_SESSION_TOKEN" ]; then
+  echo "Error: No se pudo asumir el rol elevado."
+  exit 1
+fi
+echo "Rol elevado asumido correctamente."
 exit 0
