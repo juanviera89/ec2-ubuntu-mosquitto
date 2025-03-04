@@ -64,7 +64,8 @@ Notas
 - Asegúrate de reemplazar los valores de los marcadores de posición (TU_CUENTA, TU_REGION, etc.) con los valores reales de tu entorno.
 - Los scripts asumen que se ejecutan en una instancia EC2 de Ubuntu con los permisos de IAM adecuados.
 - Las contraseñas de mosquitto deben tener el formato username:hashpass. Donde cada usuario debe ser una linea diferente y la contraseña debe ser en texto plano, posteriormente las mismas seran encriptadas por el proceso de actualizacion/configuracion de conttrtaseñas 
-
+- el archivo de [ejemplo de configuracion](./resources/mosquitto.conf) es un ejemplo funcional de un archivo de configuracion, comentado para facilitar el ajuste de configuraciones
+ 
 Fuentes y contenido relacionado
 - [mosquitto.conf](https://mosquitto.org/man/mosquitto-conf-5.html)
 - [mosquitto_passwd](https://mosquitto.org/man/mosquitto_passwd-1.html#)
