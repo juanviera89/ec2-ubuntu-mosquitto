@@ -60,7 +60,7 @@ El script te dará la opción de instalar o configurar los componentes que no es
 - mqtt_update_pass: Actualiza el archivo de contraseñas de Mosquitto. (Rquiere argumento ec2-secreto-inicial)
 
 
-Notas
+# Notas
 - Asegúrate de reemplazar los valores de los marcadores de posición (TU_CUENTA, TU_REGION, etc.) con los valores reales de tu entorno.
 - Los scripts asumen que se ejecutan en una instancia EC2 de Ubuntu con los permisos de IAM adecuados.
 - Las contraseñas de mosquitto deben tener el formato username:hashpass. Donde cada usuario debe ser una linea diferente y la contraseña debe ser en texto plano, posteriormente las mismas seran encriptadas por el proceso de actualizacion/configuracion de conttrtaseñas 
