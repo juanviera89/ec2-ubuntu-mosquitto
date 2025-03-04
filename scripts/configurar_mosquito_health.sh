@@ -1,5 +1,8 @@
 #!/bin/bash
-
+if [ -z "$1" ]; then
+echo "Error: Se debe proporcionar el argumento secret-name."
+exit 1
+fi
 # Variables
 SNS_TOPIC_FILE="/mosquitto/sns_topic_arn.txt"
 
@@ -8,9 +11,9 @@ source ./instance_role.sh # Obtener credenciales de instancia
 
 SECRET_NAME=$(aws secretsmanager get-secret-value --secret-id "$1" --query 'SecretString' --output text)
 
-source ./elevated_role.sh # Asumir rol elevado
-
-SNS_TOPIC_ARN=$(aws secretsmanager get-secret-value --secret-id "$SECRET_NAME" --query 'SecretString' --output text | jq -r '.sns_topic_arn')
+source ./elevated_role.sh  "$1"# Asumir rol elevado
+MQTT_SECRET=$(echo "$SECRET_VALUE" | jq -r '.mqtt-config-secret')
+SNS_TOPIC_ARN=$(aws secretsmanager get-secret-value --secret-id "$MQTT_SECRET" --query 'SecretString' --output text | jq -r '.sns_topic_arn')
 
 # Verificar si se obtuvo el ARN del tema de SNS
 if [ -z "$SNS_TOPIC_ARN" ]; then
