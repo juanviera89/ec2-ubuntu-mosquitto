@@ -1,6 +1,9 @@
 #!/bin/bash
-chmod +x ./scripts/*.sh
+
 case "$1" in
+  "reparar_permisos")
+    chmod +x ./scripts/*.sh
+    ;;
   "configurar_cron")
     ./scripts/configurar_cron.sh
     ;;
