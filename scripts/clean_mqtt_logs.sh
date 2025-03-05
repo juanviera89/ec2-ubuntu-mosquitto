@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOG_DIR="/mosquitto/tracing/logs"
+LOG_DIR="/var/log/mosquitto/"
 DAYS_TO_KEEP=7
 
 # Verificar si el directorio existe

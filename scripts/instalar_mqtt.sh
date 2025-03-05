@@ -26,13 +26,13 @@ if ! systemctl is-enabled mosquitto &> /dev/null; then
   echo "Servicio Mosquitto habilitado correctamente."
 fi
 # 1. Obtener credenciales de EC2
-source ./instance_role.sh
+source "$(dirname "$0")/instance_role.sh"
 
 # 2. Leer secreto inicial
 SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id "$1" --query 'SecretString' --output text)
 
 # 3. Asumir rol elevado
-source ./elevated_role.sh "$1"
+source "$(dirname "$0")/elevated_role.sh "$1""
 
 # 4. Escribir configuracion de mosquitto
 ./mqtt_update_conf_sub.sh "$SECRET_VALUE"

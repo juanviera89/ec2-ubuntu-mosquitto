@@ -13,12 +13,12 @@ if ! command -v logrotate &> /dev/null; then
   echo "Logrotate instalado correctamente."
 fi
 # Verificar si el directorio de logs existe
-if [ ! -d "/mosquitto/logs" ]; then
-  echo "Error: El directorio /mosquitto/logs no existe."
+if [ ! -d "/var/log/mosquitto" ]; then
+  echo "Error: El directorio /var/log/mosquitto no existe."
   exit 1
 fi
 # Crear archivo de configuración
-echo "/mosquitto/logs/mosquitto.log* {
+echo "/var/log/mosquitto/mosquitto.log* {
     daily
     rotate 21
     maxage 7

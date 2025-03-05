@@ -10,27 +10,27 @@ SECRET_NAME="$1" # Nombre del secreto inicial
 # Funciones de instalación y configuración
 instalar_awscli() {
   echo "Instalando AWS CLI..."
-  ./instalar_awscli.sh
+  $(dirname "$0")/instalar_awscli.sh
 }
 
 instalar_mqtt() {
   echo "Instalando Mosquitto..."
-  ./instalar_mqtt.sh "$SECRET_NAME"
+  $(dirname "$0")/instalar_mqtt.sh "$SECRET_NAME"
 }
 
 configurar_cron_limpieza() {
   echo "Configurando cron de limpieza de logs..."
-  ./configurar_cron.sh "$SECRET_NAME"
+  $(dirname "$0")/configurar_cron.sh "$SECRET_NAME"
 }
 
 configurar_logrotate() {
   echo "Configurando Logrotate..."
-  ./configurar_logrotate.sh
+  $(dirname "$0")/configurar_logrotate.sh
 }
 
 configurar_cron_monitoreo() {
   echo "Configurando cron de monitoreo de Mosquitto..."
-  ./configurar_mosquito_health.sh "$SECRET_NAME"
+  $(dirname "$0")/configurar_mosquito_health.sh "$SECRET_NAME"
 }
 
 # Instalación de AWS CLI

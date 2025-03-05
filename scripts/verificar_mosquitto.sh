@@ -1,18 +1,18 @@
 #!/bin/bash
 
 # Variables
-SNS_TOPIC_FILE="/mosquitto/sns_topic_arn.txt"
+SNS_TOPIC_FILE="/etc/mosquitto/sns_topic_arn.txt"
 INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 
 # Función para enviar alerta a SNS
 enviar_alerta() {
   local mensaje="Alerta: El servicio Mosquitto ha fallado dos veces consecutivas en la instancia $INSTANCE_ID."
-  ./enviar_log_cloudwatch.sh "MOSQUITTO-ERROR: El servicio Mosquitto ha fallado dos veces consecutivas en la instancia $INSTANCE_ID."
+  "$(dirname "$0")/enviar_log_cloudwatch.sh "MOSQUITTO-ERROR: El servicio Mosquitto ha fallado dos veces consecutivas en la instancia $INSTANCE_ID.""
 
   # Verificar archivo de script cron
-    if [ ! -f "/mosquitto/sns_topic_arn.txt" ]; then
+    if [ ! -f "$SNS_TOPIC_FILE" ]; then
     echo "FAIL: No se encuentra el ARN de topico de alertas."
-    ./enviar_log_cloudwatch.sh "SNS-ALERT: No se encuentra el ARN de topico de alertas."
+    $(dirname "$0")/enviar_log_cloudwatch.sh "SNS-ALERT: No se encuentra el ARN de topico de alertas."
     exit 1
     fi
 

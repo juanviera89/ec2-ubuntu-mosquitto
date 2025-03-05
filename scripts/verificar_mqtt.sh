@@ -17,13 +17,13 @@
   fi
 
   # 3.3 Verificar archivo de configuración
-  if [ ! -f "/mosquitto/config/mosquitto.conf" ]; then
+  if [ ! -f "/etc/mosquitto/conf.d/mosquitto.conf" ]; then
     echo "FAIL: No se encuentra el archivo de configuración de Mosquitto."
     exit 1
   fi
 
   # 3.4 Verificar archivo de contraseñas
-  if [ ! -f "/mosquitto/config/pass.txt" ]; then
+  if [ ! -f "/etc/mosquitto/pass.txt" ]; then
     echo "FAIL: No se encuentra el archivo de contraseñas de Mosquitto."
     exit 1
   fi

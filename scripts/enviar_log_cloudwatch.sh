@@ -4,7 +4,7 @@
 LOG_MESSAGE="$1"
 INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/[a-z]$//')
-source ./instance_role.sh # Obtener credenciales de instancia
+source "$(dirname "$0")/instance_role.sh" # Obtener credenciales de instancia
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 LOG_GROUP_NAME="mosquitto-$INSTANCE_ID"
 LOG_STREAM_NAME="ec2-mqtt-$(date +%Y-%m-%d)"
