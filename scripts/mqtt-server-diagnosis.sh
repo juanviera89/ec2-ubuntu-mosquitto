@@ -4,50 +4,50 @@
 verificar_aws() {
   local result=$($(dirname "$0")/verificar_aws.sh "$1")
   echo "$result"
-  return "$result"
+  return 0
 }
 
 verificar_mqtt() {
   local result=$($(dirname "$0")/verificar_mqtt.sh "$1")
   echo "$result"
-  return "$result"
+  return 0
 }
 
 verificar_cron() {
   local result=$($(dirname "$0")/verificar_cron.sh "$1")
   echo "$result"
-  return "$result"
+  return 0
 }
 
 verificar_logrotate () {
   local result=$($(dirname "$0")/verificar_lograte.sh "$1")
   echo "$result"
-  return "$result"
+  return 0
 }
 
 # Funciones de instalación y configuración
 instalar_aws_cli() {
   local result=$($(dirname "$0")/instalar_awscli.sh "$1")
   echo "$result"
-  return "$result"
+  return 0
 }
 
 instalar_configurar_mqtt() {
   local result=$($(dirname "$0")/instalar_mqtt.sh "$1")
   echo "$result"
-  return "$result"
+  return 0
 }
 
 configurar_cron() {
   local result=$($(dirname "$0")/configurar_cron.sh "$1")
   echo "$result"
-  return "$result"
+  return 0
 }
 
 configurar_logrotate() {
   local result=$($(dirname "$0")/configurar_logrotate.sh "$1")
   echo "$result"
-  return "$result"
+  return 0
 }
 
 # Función principal
@@ -79,6 +79,7 @@ main() {
   echo "Resultado de la verificación de AWS: $AWS_RESULT"
   echo "Resultado de la verificación de MQTT: $MQTT_RESULT"
   echo "Resultado de la verificación de CRON: $CRON_RESULT"
+  echo "Resultado de la verificación de LOGROTATE: $LOGROTATE_RESULT"
 
   # Acciones basadas en los resultados
   if [ "$AWS_RESULT" != "SUCCESS" ]; then
