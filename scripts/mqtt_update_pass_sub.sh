@@ -10,5 +10,6 @@ MQTT_SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id "$MQTT_SECRE
 
 MQTT_PASS=$(echo "$MQTT_SECRET_VALUE" | jq -r '.["mqtt-pass"]')
 echo "$MQTT_PASS" > "/etc/mosquitto/pass.txt"
+chmod 0700 /etc/mosquitto/pass.txt
 mosquitto_passwd -U /etc/mosquitto/pass.txt
 exit 0
