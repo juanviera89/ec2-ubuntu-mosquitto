@@ -8,7 +8,7 @@ fi
 
 
 # 1. Obtener credenciales de EC2
-source "$(dirname "$0")/instance_role.sh" > /dev/null 2>&1
+source "$(dirname "$0")/instance_role.sh" 
 
 #Verificar las credenciales
 INSTANCE_ROL_IDENTITY="$(aws sts get-caller-identity)"

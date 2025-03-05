@@ -23,4 +23,4 @@ if [ -z "$ELEVATED_ROL_USER_ID" ] || [ -z "$ELEVATED_ROL_ACCOUNT" ] || [ -z "$EL
   echo "Error: No se pudo asumir el rol elevado."
   exit 1
 fi
-echo "Rol elevado asumido correctamente."
+#echo "Rol elevado asumido correctamente."

@@ -17,4 +17,4 @@ if [ -z "$INSTANCE_ROL_USER_ID" ] || [ -z "$INSTANCE_ROL_ACCOUNT" ] || [ -z "$IN
   echo "Error: No se pudo asumir el rol de instancia."
   exit 1
 fi
-echo "Credenciales de EC2 obtenidas correctamente."
+#echo "Credenciales de EC2 obtenidas correctamente."
