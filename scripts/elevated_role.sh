@@ -13,9 +13,9 @@ export AWS_ACCESS_KEY_ID=$(jq -r '.Credentials.AccessKeyId' <<< "$ELEVATED_CREDE
 export AWS_SECRET_ACCESS_KEY=$(jq -r '.Credentials.SecretAccessKey' <<< "$ELEVATED_CREDENTIALS")
 export AWS_SESSION_TOKEN=$(jq -r '.Credentials.SessionToken' <<< "$ELEVATED_CREDENTIALS")
 
-ELEVATED_ROL_IDENTITY = "$(aws sts get-caller-identity)"
-ELEVATED_ROL_USER_ID= $(echo "$ELEVATED_ROL_IDENTITY" | jq -r '.UserId')
-ELEVATED_ROL_ACCOUNT= $(echo "$ELEVATED_ROL_IDENTITY" | jq -r '.Account')
+ELEVATED_ROL_IDENTITY="$(aws sts get-caller-identity)"
+ELEVATED_ROL_USER_ID=$(echo "$ELEVATED_ROL_IDENTITY" | jq -r '.UserId')
+ELEVATED_ROL_ACCOUNT=$(echo "$ELEVATED_ROL_IDENTITY" | jq -r '.Account')
 ELEVATED_ROLE_NAME=$(echo "$ELEVATED_ROLE" | cut -d ':' -f 6)
 ELEVATED_ROL_ARN=$(echo "$ELEVATED_ROL_IDENTITY" | jq -r '.Arn' | grep "$ELEVATED_ROLE_NAME" )
 
