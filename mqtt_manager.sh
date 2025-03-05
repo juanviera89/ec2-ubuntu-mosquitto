@@ -32,7 +32,7 @@ case "$1" in
     ./scripts/mqtt-server-diagnosis.sh "$2"
     ;;
   *)
-    echo "Uso: $0 {configurar_cron|configurar_logrotate|configurar_mosquito_health|instalacion_inicial|instalar_awscli|instalar_mqtt|mqtt_update_config|mqtt_update_pass|mqtt-server-diagnosis} [secret-name-inicial]"
+    echo "Uso: $0 {reparar_permisos|configurar_cron|configurar_logrotate|configurar_mosquito_health|instalacion_inicial|instalar_awscli|instalar_mqtt|mqtt_update_config|mqtt_update_pass|mqtt-server-diagnosis} [secret-name-inicial]"
     exit 1
     ;;
 esac

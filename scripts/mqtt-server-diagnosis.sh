@@ -2,50 +2,50 @@
 
 # Funciones de verificación
 verificar_aws() {
-  local result=$(dirname "$0"/verificar_aws.sh "$1")
+  local result=$($(dirname "$0")/verificar_aws.sh "$1")
   echo "$result"
   return "$result"
 }
 
 verificar_mqtt() {
-  local result=$(dirname "$0"/verificar_mqtt.sh "$1")
+  local result=$($(dirname "$0")/verificar_mqtt.sh "$1")
   echo "$result"
   return "$result"
 }
 
 verificar_cron() {
-  local result=$(dirname "$0"/verificar_cron.sh "$1")
+  local result=$($(dirname "$0")/verificar_cron.sh "$1")
   echo "$result"
   return "$result"
 }
 
 verificar_logrotate () {
-  local result=$(dirname "$0"/verificar_lograte.sh "$1")
+  local result=$($(dirname "$0")/verificar_lograte.sh "$1")
   echo "$result"
   return "$result"
 }
 
 # Funciones de instalación y configuración
 instalar_aws_cli() {
-  local result=$(dirname "$0"/instalar_awscli.sh "$1")
+  local result=$($(dirname "$0")/instalar_awscli.sh "$1")
   echo "$result"
   return "$result"
 }
 
 instalar_configurar_mqtt() {
-  local result=$(dirname "$0"/instalar_mqtt.sh "$1")
+  local result=$($(dirname "$0")/instalar_mqtt.sh "$1")
   echo "$result"
   return "$result"
 }
 
 configurar_cron() {
-  local result=$(dirname "$0"/configurar_cron.sh "$1")
+  local result=$($(dirname "$0")/configurar_cron.sh "$1")
   echo "$result"
   return "$result"
 }
 
 configurar_logrotate() {
-  local result=$(dirname "$0"/configurar_logrotate.sh "$1")
+  local result=$($(dirname "$0")/configurar_logrotate.sh "$1")
   echo "$result"
   return "$result"
 }
