@@ -13,4 +13,6 @@ MQTT_CONF=$(echo "$MQTT_SECRET_VALUE" | jq -r '.["mqtt-conf"]')
 echo "$MQTT_CONF" > "/etc/mosquitto/conf.d/mqtt1.conf"
 sudo iconv -f ISO-8859-1 -t UTF-8 /etc/mosquitto/mqtt1.conf -o /etc/mosquitto/conf.d/mqtt1.conf.utf8
 sudo mv /etc/mosquitto/conf.d/mqtt1.conf.utf8 /etc/mosquitto/conf.d/mqtt1.conf
+sudo systemctl daemon-reload
+sudo systemctl restart mosquitto
 exit 0

@@ -20,8 +20,10 @@ fi
 # Crear archivo de configuración
 echo "/var/log/mosquitto/mosquitto.log* {
     daily
-    rotate 21
+    rotate 35
     maxage 7
+    create 644 mosquitto mosquitto 
+    size=5M
     delaycompress
     compress
     compresscmd /usr/bin/gzip
