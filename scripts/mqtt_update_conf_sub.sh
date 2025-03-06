@@ -11,7 +11,7 @@ MQTT_SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id "$MQTT_SECRE
 # 5. Escribir configuración de Mosquitto
 MQTT_CONF=$(echo "$MQTT_SECRET_VALUE" | jq -r '.["mqtt-conf"]')
 echo "$MQTT_CONF" > "/etc/mosquitto/conf.d/mqtt1.conf"
-sudo iconv -f ISO-8859-1 -t UTF-8 /etc/mosquitto/mqtt1.conf -o /etc/mosquitto/conf.d/mqtt1.conf.utf8
+sudo iconv -f ISO-8859-1 -t UTF-8 /etc/mosquitto/conf.d/mqtt1.conf -o /etc/mosquitto/conf.d/mqtt1.conf.utf8
 sudo mv /etc/mosquitto/conf.d/mqtt1.conf.utf8 /etc/mosquitto/conf.d/mqtt1.conf
 sudo chmod 644 /etc/mosquitto/conf.d/mqtt1.conf # Required by mosquitto
 chown root /etc/mosquitto/conf.d/mqtt1.conf # Required by mosquitto
