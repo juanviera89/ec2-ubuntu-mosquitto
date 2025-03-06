@@ -40,15 +40,16 @@ instalar_awscli
 instalar_mqtt
 
 # Configuración opcional
-read -p "¿Desea configurar el cron de limpieza de logs? (s/n): " respuesta
+read -p "¿Desea configurar Logrotate? (s/n): " respuesta
 if [ "$respuesta" == "s" ]; then
-  configurar_cron_limpieza
+  configurar_logrotate
 fi
 
 if [ "$respuesta" != "s" ]; then
-    read -p "¿Desea configurar Logrotate? (s/n): " respuesta
+
+    read -p "¿Desea configurar el cron de limpieza de logs? (s/n): " respuesta
     if [ "$respuesta" == "s" ]; then
-    configurar_logrotate
+    configurar_cron_limpieza
     else
     echo "No configurar ningun mecanismo de limpieza de logs puede derivar en un uso excesivo de espacio de almacenamiento. Si el espacio de almacenamiento se agota, el servicio de Mosquitto MQTT dejara de funcionar"
     fi
