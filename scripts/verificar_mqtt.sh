@@ -17,7 +17,7 @@
   fi
 
   # 3.3 Verificar archivo de configuración
-  if [ ! -f "/etc/mosquitto/conf.d/mosquitto.conf" ]; then
+  if [ ! -f "/etc/mosquitto/conf.d/mqtt1.conf" ]; then
     echo "FAIL: No se encuentra el archivo de configuración de Mosquitto."
     exit 1
   fi
