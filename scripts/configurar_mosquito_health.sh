@@ -22,7 +22,7 @@ if [ -z "$SNS_TOPIC_ARN" ]; then
 fi
 
 # Guardar ARN del tema de SNS en archivo local
-echo "$SNS_TOPIC_ARN" > "$SNS_TOPIC_FILE"
+sudo echo "$SNS_TOPIC_ARN" > "$SNS_TOPIC_FILE"
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
