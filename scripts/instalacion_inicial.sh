@@ -1,9 +1,9 @@
 #!/bin/bash
 # Verificar si se proporciona el argumento secret-name
 if [ -z "$1" ]; then
-echo "Error: Se debe proporcionar el argumento secret-name."
-exit 1
-
+  echo "Error: Se debe proporcionar el argumento secret-name."
+  exit 1
+fi
 # Variables
 SECRET_NAME="$1" # Nombre del secreto inicial
 
@@ -46,13 +46,12 @@ if [ "$respuesta" == "s" ]; then
 fi
 
 if [ "$respuesta" != "s" ]; then
-
-    read -p "¿Desea configurar el cron de limpieza de logs? (s/n): " respuesta
-    if [ "$respuesta" == "s" ]; then
+  read -p "¿Desea configurar el cron de limpieza de logs? (s/n): " respuesta
+  if [ "$respuesta" == "s" ]; then
     configurar_cron_limpieza
-    else
+  else
     echo "No configurar ningun mecanismo de limpieza de logs puede derivar en un uso excesivo de espacio de almacenamiento. Si el espacio de almacenamiento se agota, el servicio de Mosquitto MQTT dejara de funcionar"
-    fi
+  fi
 fi
 
 read -p "¿Desea configurar el cron de monitoreo de Mosquitto? (s/n): " respuesta
