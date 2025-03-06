@@ -15,7 +15,7 @@ instalar_awscli() {
 
 instalar_mqtt() {
   echo "Instalando Mosquitto..."
-  $(dirname "$0")/instalar_mqtt.sh "$SECRET_NAME"
+  sudo $(dirname "$0")/instalar_mqtt.sh "$SECRET_NAME"
 }
 
 configurar_cron_limpieza() {

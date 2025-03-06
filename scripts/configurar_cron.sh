@@ -26,7 +26,7 @@ MQTT_SECRET=$(echo "$SECRET_VALUE" | jq -r '.["mqtt-config-secret"]')
 MQTT_SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id "$MQTT_SECRET" --query 'SecretString' --output text)
 
 # 5. Copiar script de limpieza y aplicar permisos
-cp "$(dirname "$0")/clean_mqtt_logs.sh" /etc/mosquitto/clean_mqtt_logs.sh
+sudo cp "$(dirname "$0")/clean_mqtt_logs.sh" /etc/mosquitto/clean_mqtt_logs.sh
 sudo chmod +x /etc/mosquitto/clean_mqtt_logs.sh
 
 # 6. Leer configuración de cron
