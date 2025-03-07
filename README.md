@@ -27,12 +27,80 @@ Este documento describe cómo configurar un servidor Mosquitto en una instancia 
   "mqtt-clean-cron": "Expresion CRON para definir periodicidad de limpieza de logs"
 }
 ```
+## Preparacion de instancia
+
+1. Instancia debe ser basada en Ubuntu 24 o superior
+2. Debe tener un perfil cuya politica de permisos contenga al menos los siguientes permisos:
+  ```json
+  {
+      "Version": "2012-10-17",
+      "Statement": [
+          {
+              "Sid": "VisualEditor0",
+              "Effect": "Allow",
+              "Action": [
+                  "sts:AssumeRole",
+                  "secretsmanager:GetSecretValue",
+                  "secretsmanager:DescribeSecret",
+                  "sns:Publish",
+                  "sns:GetTopicAttributes",
+                  "logs:DescribeLogStreams",
+                  "logs:GetLogEvents",
+                  "logs:CreateLogGroup",
+                  "logs:ListTagsLogGroup",
+                  "logs:CreateLogStream",
+                  "logs:GetLogRecord",
+                  "logs:PutRetentionPolicy",
+                  "logs:PutLogEvents"
+              ],
+              "Resource": [
+                  "arn:aws:iam::879381280001:role/ec2-mqtt-elevated-rol",
+                  "arn:aws:secretsmanager:us-east-1:879381280001:secret:prod/mqtt/rol-c9Y5Pk",
+                  "arn:aws:logs:us-east-1:879381280001:log-group:ec2-mqtt-*",
+                  "arn:aws:logs:us-east-1:879381280001:log-group:arn:aws:logs:us-east-1:879381280001:log-group:ec2-mqtt-*:log-stream:mosquitto-*",
+                  "arn:aws:sns:us-east-1:879381280001:CloudWatch_Alarms_TgtGrp_min_instances"
+              ]
+          },
+          {
+              "Sid": "VisualEditor1",
+              "Effect": "Allow",
+              "Action": [
+                  "sts:GetSessionToken",
+                  "sts:GetAccessKeyInfo",
+                  "sts:GetCallerIdentity",
+                  "sts:GetServiceBearerToken",
+                  "sns:ListTopics",
+                  "logs:DescribeLogGroups"
+              ],
+              "Resource": "*"
+          }
+      ]
+  }
+  ```
+  El roldebe estar asociado a la instancia. Se sugiere; por buenas practivas de seguridad;  que el rol solo pueda ser asumido por instancias de EC2. Se puede aplicar relacion de confianza al rol:
+  ```json
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "ec2.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+  }
+  ```
+3. El grupo de seguridad asociado debe permitir ingress SSH desde la instancia bastion, y permitir TCP/UDP en el puerto configurado para mqtt desde el balanceador de carga. Se sugiere; por buenas practivas de seguridad; desactivar la asignacion de ip publica automatica y que la regla de ingress de MQTT sea solo desde el balanceador o redes internas.
+
+
 
 ## Instalación y configuración
 Clona este repositorio en tu instancia EC2.
 Navega al directorio del repositorio.
-aplica el comando `chmod +x ./mqtt_manager.sh`
-Ejecuta la instalacion inicial aplicando `./mqtt_manager.sh instalacion_inicial ec2-secreto-inicial`. ec2-secreto-inicial es el nombre del secreto base que contiene el arn del rol elevado, el nombre o ARN del secreto que contiene la configuracion de MQTT y el ARN del topico SNS para alertas
+aplica el comando `chmod +x ./mqtt_manager.sh` y posteriormente `./mqtt_manager.sh reparar_permisos`
+Ejecuta la instalacion inicial aplicando `sudo ./mqtt_manager.sh instalacion_inicial ec2-secreto-inicial`. ec2-secreto-inicial es el nombre del secreto base que contiene el arn del rol elevado, el nombre o ARN del secreto que contiene la configuracion de MQTT y el ARN del topico SNS para alertas
 
 ## Diagnóstico
 Ejecuta el script `./mqtt_manager.sh mqtt-server-diagnosis ec2-secreto-inicial`. ec2-secreto-inicial es el nombre del secreto base que contiene el arn del rol elevado, el nombre o ARN del secreto que contiene la configuracion de MQTT y el ARN del topico SNS para alertas.
@@ -50,7 +118,7 @@ El script te dará la opción de instalar o configurar los componentes que no es
 
 ## Scripts adicionales
 
-
+- reparar_permisos: Aplica permisos de ejecucion para los scripts de administracion. Sin los permisos adecuados, ejecutar cualquier comando de mqtt_manager indicara error de permiso o script no encontrado
 - configurar_cron: Configura un CRON para eliminar logs. Es mas estricto que logrotate dado que elimina todos los archivos en un directorio, que hayan sido creados anterior a 7 dias. La periodicidad es configurada a partir del valor de `mqtt-clean-cron` en el secreto de configuracion mqtt.  (Rquiere argumento ec2-secreto-inicial)
 - configurar_logrotate: Configura logrotate, una herramienta eficiente que comprime logs pasados cierta fecha para disminuir el consumo de almacenamiento, y tambien elimina logs con mucho mas tiempo para liberar espacio.
 - configurar_mosquito_health: Configura un CRON de monitoreo de estado de ejecucion del servicio MQTT. En caso de fallo envia notificacion al topico configurado en "ec2-secreto-inicial" y genera logs en Cloudwatch.  (Rquiere argumento ec2-secreto-inicial)
@@ -64,10 +132,30 @@ El script te dará la opción de instalar o configurar los componentes que no es
 - Los scripts deben ser ejecutados desde cuenta Root
 - Asegúrate de reemplazar los valores de los marcadores de posición (TU_CUENTA, TU_REGION, etc.) con los valores reales de tu entorno.
 - Los scripts asumen que se ejecutan en una instancia EC2 de Ubuntu con los permisos de IAM adecuados.
-- Las contraseñas de mosquitto deben tener el formato username:hashpass. Donde cada usuario debe ser una linea diferente y la contraseña debe ser en texto plano, posteriormente las mismas seran encriptadas por el proceso de actualizacion/configuracion de conttrtaseñas 
-- el archivo de [ejemplo de configuracion](./resources/mosquitto.conf) es un ejemplo funcional de un archivo de configuracion, comentado para facilitar el ajuste de configuraciones
+- Las contraseñas de mosquitto deben tener el formato username:password. Donde cada usuario debe ser una linea diferente y la contraseña debe ser en texto plano, posteriormente las mismas seran encriptadas por el proceso de actualizacion/configuracion de conttrtaseñas 
+- el archivo de [ejemplo de configuracion](./resources/mosquitto.conf) es un ejemplo funcional de un archivo de configuracion, comentado para facilitar el ajuste de configuraciones. Se sugiere eliminar los comentarios antes de almacenar la configuracion en Secret manager
+- La configuracion debe ser almacenada en texto plano en secret manager, por lo que debe aplicar caracter de salto de line \\n para cada linea
  
 Fuentes y contenido relacionado
 - [mosquitto.conf](https://mosquitto.org/man/mosquitto-conf-5.html)
 - [mosquitto_passwd](https://mosquitto.org/man/mosquitto_passwd-1.html#)
 - [Create secrent in secret manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/create_secret.html)
+
+## Ejemplos de secretos para secret manager
+
+- ec2-secreto-inicial:
+```json
+{
+  "elevated-rol":"arn:aws:iam::AWS-ACCOUNT-ID:role/ELEVATED-ROLE-NAME",
+  "mqtt-config-secret":"arn:aws:secretsmanager:REGION:AWS-ACCOUNT-ID:secret:prod/MQTT-CONFIG-SECRET-NAME",
+  "sns_topic_arn":"arn:aws:sns:REGION:AWS-ACCOUNT-ID:SNS-TOPIC-NAME"
+}
+```
+- MQTT-CONFIG-SECRET-NAME:
+```json
+{
+  "mqtt-pass":"snappmqtt:thisisanicepassword",
+  "mqtt-conf":"port 9883\nallow_anonymous false\nallow_zero_length_clientid true\npassword_file /etc/mosquitto/pass.txt\nsys_interval 60\npersistence true\nmax_packet_size 10240\nmax_keepalive 60\npersistent_client_expiration 1m\n",
+  "mqtt-clean-cron":"0 6 * * *"
+}
+```

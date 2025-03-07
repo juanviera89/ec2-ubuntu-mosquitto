@@ -33,7 +33,7 @@ instalar_aws_cli() {
 }
 
 instalar_configurar_mqtt() {
-  local result=$($(dirname "$0")/instalar_mqtt.sh "$1")
+  local result=$(sudo $(dirname "$0")/instalar_mqtt.sh "$1")
   echo "$result"
   return 0
 }
