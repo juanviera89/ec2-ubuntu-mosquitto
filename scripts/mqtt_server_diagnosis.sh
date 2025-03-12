@@ -19,6 +19,12 @@ verificar_cron() {
   return 0
 }
 
+verificar_mqtt_cron() {
+  local result=$($(dirname "$0")/verificar_mqtt_cron.sh "$1")
+  echo "$result"
+  return 0
+}
+
 verificar_logrotate () {
   local result=$($(dirname "$0")/verificar_lograte.sh "$1")
   echo "$result"
@@ -44,6 +50,12 @@ configurar_cron() {
   return 0
 }
 
+configurar_mqtt_cron() {
+  local result=$($(dirname "$0")/configurar_mqtt_cron.sh "$1")
+  echo "$result"
+  return 0
+}
+
 configurar_logrotate() {
   local result=$($(dirname "$0")/configurar_logrotate.sh "$1")
   echo "$result"
@@ -62,6 +74,7 @@ main() {
   # Variables para almacenar los resultados de las verificaciones
   AWS_RESULT="FAIL"
   MQTT_RESULT="FAIL"
+  MQTT_CRON_RESULT="FAIL"
   CRON_RESULT="FAIL"
   LOGROTATE_RESULT="FAIL"
 
@@ -69,6 +82,7 @@ main() {
   AWS_RESULT=$(verificar_aws "$SECRET_NAME")
   if [ "$AWS_RESULT" == "SUCCESS" ]; then
     MQTT_RESULT=$(verificar_mqtt)
+    MQTT_CRON_RESULT=$(verificar_mqtt_cron)
   fi
 	#if [ "$MQTT_RESULT" == "SUCCESS" ]; then
 	  CRON_RESULT=$(verificar_cron)
@@ -78,6 +92,7 @@ main() {
   # Mostrar resultados
   echo "Resultado de la verificación de AWS: $AWS_RESULT"
   echo "Resultado de la verificación de MQTT: $MQTT_RESULT"
+  echo "Resultado de la verificación de CRON REINICIO MQTT: $MQTT_CRON_RESULT"
   echo "Resultado de la verificación de CRON: $CRON_RESULT"
   echo "Resultado de la verificación de LOGROTATE: $LOGROTATE_RESULT"
 
@@ -96,6 +111,13 @@ main() {
       main "$SECRET_NAME" # Volver a ejecutar el diagnóstico
       return
     fi
+  elif [ "$MQTT_CRON_RESULT" != "SUCCESS" ]; then
+    read -p "Desea configurar cron de reinicio MQTT? (Y/n): " respuesta
+    if [ "$respuesta" == "Y" ]; then
+      configurar_mqtt_cron
+      main "$SECRET_NAME" # Volver a ejecutar el diagnóstico
+      return
+    fi  
   elif [ "$CRON_RESULT" != "SUCCESS" ] && [ "$LOGROTATE_RESULT" != "SUCCESS" ]; then
     read -p "Desea configurar CRON o LOGROTATE? (cron/logrotate): " respuesta
     if [ "$respuesta" == "cron" ]; then

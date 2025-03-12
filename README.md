@@ -92,18 +92,25 @@ Este documento describe cómo configurar un servidor Mosquitto en una instancia 
     ]
   }
   ```
-3. El grupo de seguridad asociado debe permitir ingress SSH desde la instancia bastion, y permitir TCP/UDP en el puerto configurado para mqtt desde el balanceador de carga. Se sugiere; por buenas practivas de seguridad; desactivar la asignacion de ip publica automatica y que la regla de ingress de MQTT sea solo desde el balanceador o redes internas.
+3. El grupo de seguridad asociado debe permitir ingress SSH desde la instancia bastion, y permitir TCP en el puerto configurado para mqtt desde el balanceador de carga. Se sugiere; por buenas practivas de seguridad; desactivar la asignacion de ip publica automatica y que la regla de ingress de MQTT sea solo desde el balanceador o redes internas.
+4. Puede aplicar comprobacion de estado en el grupo destino, usando comprobacion TCP al puerto de trafico
+5. Se sugiere que el agente de escucha del balanceador de carga sea de tipo TLS para delegar el trabajo de cifrado al balanceador y mantener la conexion segura entre el servicio y los clientes.
+6. El grupo de seguridad del balanceador de carga debe permitir conexiones entrantes en el puerto del agente de escucha creado para el servidor mqtt
 
 
 
 ## Instalación y configuración
-Clona este repositorio en tu instancia EC2.
-Navega al directorio del repositorio.
-aplica el comando `chmod +x ./mqtt_manager.sh` y posteriormente `./mqtt_manager.sh reparar_permisos`
-Ejecuta la instalacion inicial aplicando `sudo ./mqtt_manager.sh instalacion_inicial ec2-secreto-inicial`. ec2-secreto-inicial es el nombre del secreto base que contiene el arn del rol elevado, el nombre o ARN del secreto que contiene la configuracion de MQTT y el ARN del topico SNS para alertas
+- Clona este repositorio en tu instancia EC2.
+- Navega al directorio del repositorio.
+- Aplica el comando `chmod +x ./mqtt_manager.sh` y posteriormente `./mqtt_manager.sh reparar_permisos`
+- Ejecuta la instalacion inicial aplicando `sudo ./mqtt_manager.sh instalacion_inicial ec2-secreto-inicial`. ec2-secreto-inicial es el nombre del secreto base que contiene el arn del rol elevado, el nombre o ARN del secreto que contiene la configuracion de MQTT y el ARN del topico SNS para alertas
+
+Si la instalacion inicial falla en iniciar mosquitto, ejecute el comando `sudo systemctl restart mosquitto.service` y luego ` systemctl status mosquitto.service` para verificar que se encuentre en ejecucion correctamente
+
+Puede intentar instalar mqtt nuevamente usando `sudo ./mqtt_manager.sh instalar_mqtt ec2-secreto-inicial`
 
 ## Diagnóstico
-Ejecuta el script `./mqtt_manager.sh mqtt-server-diagnosis ec2-secreto-inicial`. ec2-secreto-inicial es el nombre del secreto base que contiene el arn del rol elevado, el nombre o ARN del secreto que contiene la configuracion de MQTT y el ARN del topico SNS para alertas.
+Ejecuta el script `./mqtt_manager.sh mqtt_server_diagnosis ec2-secreto-inicial`. ec2-secreto-inicial es el nombre del secreto base que contiene el arn del rol elevado, el nombre o ARN del secreto que contiene la configuracion de MQTT y el ARN del topico SNS para alertas.
 
 Este script realizará las siguientes verificaciones:
 

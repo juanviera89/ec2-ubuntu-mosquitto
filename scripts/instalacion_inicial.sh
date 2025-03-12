@@ -37,7 +37,7 @@ configurar_cron_monitoreo() {
 instalar_awscli
 
 # Instalación de Mosquitto
-instalar_mqtt
+sudo instalar_mqtt
 
 # Configuración opcional
 read -p "¿Desea configurar Logrotate? (s/n): " respuesta

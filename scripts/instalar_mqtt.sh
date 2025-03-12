@@ -44,7 +44,10 @@ source "$ELEVATED_ROLE_SCRIPT" "$1"
 # 6. Escribir contraseñas de Mosquitto
 "$DIR_NAME/mqtt_update_pass_sub.sh" "$SECRET_VALUE"
 
-# 7. Reiniciar Mosquitto
+# 7. configurar reinicio automatico de Mosquitto
+"$DIR_NAME/configurar_mqtt_cron.sh" 
+
+# 8. Reiniciar Mosquitto
 sudo systemctl restart mosquitto
 
 echo "Mosquitto instalado y configurado correctamente."
