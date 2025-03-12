@@ -32,7 +32,7 @@ verificar_logrotate () {
 }
 
 verificar_monitor () {
-  local result=$($(dirname "$0")/verificar_mosquitto.sh "$1")
+  local result=$($(dirname "$0")/verificar_mqtt_monitor.sh "$1")
   echo "$result"
   return 0
 }
