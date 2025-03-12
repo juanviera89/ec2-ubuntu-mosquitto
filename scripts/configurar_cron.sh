@@ -1,4 +1,5 @@
 #!/bin/bash
+DIR_NAME=$(dirname "$0")
 if [ -z "$1" ]; then
 echo "Error: Se debe proporcionar el argumento secret-name."
 exit 1
@@ -6,27 +7,27 @@ fi
 echo "Configurando CRON..."
 
 # Verificar si el script de limpieza existe
-if [ ! -f "$(dirname "$0")/clean_mqtt_logs.sh" ]; then
+if [ ! -f "$DIR_NAME/clean_mqtt_logs.sh" ]; then
   echo "Error: El script clean_mqtt_logs.sh no existe en la carpeta actual."
   exit 1
 fi
 
 # 1. Obtener credenciales de EC2
-source "$(dirname "$0")/instance_role.sh"
+source "$DIR_NAME/instance_role.sh"
 
 # 2. Leer secreto inicial
 SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id "$1" --query 'SecretString' --output text)
 
 
 # 3. Asumir rol elevado
-source "$(dirname "$0")/elevated_role.sh "$1""
+source "$DIR_NAME/elevated_role.sh "$1""
 
 # 4. Leer secreto MQTT
 MQTT_SECRET=$(echo "$SECRET_VALUE" | jq -r '.["mqtt-config-secret"]')
 MQTT_SECRET_VALUE=$(aws secretsmanager get-secret-value --secret-id "$MQTT_SECRET" --query 'SecretString' --output text)
 
 # 5. Copiar script de limpieza y aplicar permisos
-sudo cp "$(dirname "$0")/clean_mqtt_logs.sh" /etc/mosquitto/clean_mqtt_logs.sh
+sudo cp "$DIR_NAME/clean_mqtt_logs.sh" /etc/mosquitto/clean_mqtt_logs.sh
 sudo chmod +x /etc/mosquitto/clean_mqtt_logs.sh
 
 # 6. Leer configuración de cron

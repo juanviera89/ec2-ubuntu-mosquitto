@@ -31,6 +31,12 @@ verificar_logrotate () {
   return 0
 }
 
+verificar_monitor () {
+  local result=$($(dirname "$0")/verificar_mosquitto.sh "$1")
+  echo "$result"
+  return 0
+}
+
 # Funciones de instalación y configuración
 instalar_aws_cli() {
   local result=$($(dirname "$0")/instalar_awscli.sh "$1")
@@ -62,6 +68,12 @@ configurar_logrotate() {
   return 0
 }
 
+configurar_monitor() {
+  local result=$($(dirname "$0")/configurar_mosquito_health.sh "$1")
+  echo "$result"
+  return 0
+}
+
 # Función principal
 main() {
   # Verificar si se proporciona el argumento secret-name
@@ -77,12 +89,14 @@ main() {
   MQTT_CRON_RESULT="FAIL"
   CRON_RESULT="FAIL"
   LOGROTATE_RESULT="FAIL"
+  MONITOR_RESULT="FAIL"
 
   # Verificaciones
   AWS_RESULT=$(verificar_aws "$SECRET_NAME")
   if [ "$AWS_RESULT" == "SUCCESS" ]; then
     MQTT_RESULT=$(verificar_mqtt)
     MQTT_CRON_RESULT=$(verificar_mqtt_cron)
+    MONITOR_RESULT=$(verificar_monitor)
   fi
 	#if [ "$MQTT_RESULT" == "SUCCESS" ]; then
 	  CRON_RESULT=$(verificar_cron)
@@ -93,6 +107,7 @@ main() {
   echo "Resultado de la verificación de AWS: $AWS_RESULT"
   echo "Resultado de la verificación de MQTT: $MQTT_RESULT"
   echo "Resultado de la verificación de CRON REINICIO MQTT: $MQTT_CRON_RESULT"
+  echo "Resultado de la verificación de MONITOR MQTT: $MONITOR_RESULT"
   echo "Resultado de la verificación de CRON: $CRON_RESULT"
   echo "Resultado de la verificación de LOGROTATE: $LOGROTATE_RESULT"
 
@@ -115,6 +130,13 @@ main() {
     read -p "Desea configurar cron de reinicio MQTT? (Y/n): " respuesta
     if [ "$respuesta" == "Y" ]; then
       configurar_mqtt_cron
+      main "$SECRET_NAME" # Volver a ejecutar el diagnóstico
+      return
+    fi 
+  elif [ "$MONITOR_RESULT" != "SUCCESS" ]; then
+    read -p "Desea configurar monitor de MQTT? (Y/n): " respuesta
+    if [ "$respuesta" == "Y" ]; then
+      configurar_monitor
       main "$SECRET_NAME" # Volver a ejecutar el diagnóstico
       return
     fi  
