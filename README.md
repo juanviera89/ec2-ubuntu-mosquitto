@@ -123,6 +123,10 @@ Este script realizará las siguientes verificaciones:
 
 El script te dará la opción de instalar o configurar los componentes que no estén configurados correctamente.
 
+use `sudo tail -f /var/log/mosquitto/mosquitto.log` para monitorear el archivo de logs de mosquitto
+
+Conectese al servidor mqtt y suscribase al topico $SYS/# para escuchar los mensajes de systema, que permiten monitorear estado del servidor
+
 ## Scripts adicionales
 
 - reparar_permisos: Aplica permisos de ejecucion para los scripts de administracion. Sin los permisos adecuados, ejecutar cualquier comando de mqtt_manager indicara error de permiso o script no encontrado
@@ -166,3 +170,23 @@ Fuentes y contenido relacionado
   "mqtt-clean-cron":"0 6 * * *"
 }
 ```
+
+Recuerde que si desea configurar mas de un usuario y contraseña, cada par debe ser una linea , y para almacenarlo en el Secrets manager de aws, cada par debe separarlo con \\n para agregar el salto de linea.
+
+# Troubleshooting
+
+## Mi dispositivo o cliente no logra conectar de forma estable, algunas veces conecta y otras no
+
+  Intenta abrir el puerto en el grupo de seguridad a la ip del cliente para el puerto mqtt. Si el cliente conecta sin problemas en el primer intento, el problema puede deberse al balanceador de carga. Asegurate que las instancias del balanceador en cada zona de disponibilidad usa cada grupo de destino en cualquier zona de disponibilidad y no que solo use el que tiene en su zona. Si el balanceador de red solo puede redirigir conexiones dentro de su misma zona de disponibilidad, las instancias del balanceador en cualquier otra zona de disponibilidad diferente a la cual se encuentra el servidor mqtt aceptaran conexiones pero no encontraran instancias a donde enviarlas, arrojando problema de conexion y el cliente solo conectara cuando aleatoriamente su intento de conexion llegue a la zona de disponibilidad que tiene el servidor
+
+## Mi dispositivo intenta conectar pero el servicio mqtt arroja error de argumentos en la conexion
+
+  Verifica que el cliente no este enviando parametros con valores por fuera de lo configurado para el servidor. Ejemplo, "max_keepalive" no puede ser superado por el parametro keepalive del cliente
+
+## No puedo conectarme al servidor y los logs no muestran intento de conexion
+
+  Verifica que los puertos MQTT en el grupo de seguridad esten abiertos para el grupo de seguridad del balanceador de carga
+  Verifica que el grupo de seguridad del balanceador de carga tenga el puerto de escucha mqtt correctamente abierto a internet o al rango ip de los clientes. 
+  Verifica que el agente de escucha del balanceador redirija correctamente las conexiones del puerto mqtt del balanceador, al puerto mqtt del servicio (Por lo general son iguales a menos que se decida hacer un port forwarding mapping)
+  Verifica que el estado del destino registrado en el grupo destino para el servicio mqtt este healthy (la instancia ec2 del servicio debe estar registrada como destino en el agente de escucha)
+  Si estas usando dominio personalizado, verifica que el dominio en Route 53 este bien mapeado al balanceador de carga del servicio mqtt
