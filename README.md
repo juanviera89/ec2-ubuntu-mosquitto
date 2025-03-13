@@ -54,11 +54,11 @@ Este documento describe cómo configurar un servidor Mosquitto en una instancia 
                   "logs:PutLogEvents"
               ],
               "Resource": [
-                  "arn:aws:iam::879381280001:role/ec2-mqtt-elevated-rol",
-                  "arn:aws:secretsmanager:us-east-1:879381280001:secret:prod/mqtt/rol-c9Y5Pk",
-                  "arn:aws:logs:us-east-1:879381280001:log-group:ec2-mqtt-*",
-                  "arn:aws:logs:us-east-1:879381280001:log-group:arn:aws:logs:us-east-1:879381280001:log-group:ec2-mqtt-*:log-stream:mosquitto-*",
-                  "arn:aws:sns:us-east-1:879381280001:CloudWatch_Alarms_TgtGrp_min_instances"
+                  "arn:aws:iam::TU_CUENTA:role/ec2-mqtt-elevated-rol",
+                  "arn:aws:secretsmanager:us-east-1:TU_CUENTA:secret:ec2-secreto-inicial",
+                  "arn:aws:logs:us-east-1:TU_CUENTA:log-group:ec2-mqtt-*",
+                  "arn:aws:logs:us-east-1:TU_CUENTA:log-group:arn:aws:logs:us-east-1:TU_CUENTA:log-group:ec2-mqtt-*:log-stream:mosquitto-*",
+                  "arn:aws:sns:us-east-1:TU_CUENTA:TOPICO_SNS_ALARMAS"
               ]
           },
           {
