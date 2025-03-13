@@ -127,6 +127,19 @@ use `sudo tail -f /var/log/mosquitto/mosquitto.log` para monitorear el archivo d
 
 Conectese al servidor mqtt y suscribase al topico $SYS/# para escuchar los mensajes de systema, que permiten monitorear estado del servidor
 
+- $SYS/broker/uptime: Tiempo de actividad del broker desde su inicio, en segundos
+- $SYS/broker/version: Versión del broker Mosquitto en ejecución
+- $SYS/broker/clients/connected: Número de clientes MQTT conectados actualmente al broker.
+- $SYS/broker/clients/disconnected: Número total de clientes que se han desconectado del broker desde su inicio.
+- $SYS/broker/clients/maximum: Número máximo de clientes que se han conectado simultáneamente al broker.
+- $SYS/broker/messages/received: Número total de mensajes MQTT recibidos por el broker desde su inicio.
+- $SYS/broker/messages/sent: Número total de mensajes MQTT enviados por el broker desde su inicio.
+- $SYS/broker/subscriptions/count: Número total de suscripciones activas en el broker
+- $SYS/broker/memory/heap/current: Cantidad de memoria heap utilizada actualmente por el broker, en bytes.
+- $SYS/broker/memory/heap/maximum: Cantidad máxima de memoria heap utilizada por el broker desde su inicio, en bytes
+- $SYS/broker/load/messages/received/1min: Número de mensajes recibidos por el broker en el último minuto.
+- $SYS/broker/load/messages/sent/1min: Número de mensajes enviados por el broker en el último minuto.
+
 ## Scripts adicionales
 
 - reparar_permisos: Aplica permisos de ejecucion para los scripts de administracion. Sin los permisos adecuados, ejecutar cualquier comando de mqtt_manager indicara error de permiso o script no encontrado
