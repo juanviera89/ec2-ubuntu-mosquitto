@@ -178,7 +178,7 @@ Fuentes y contenido relacionado
 - MQTT-CONFIG-SECRET-NAME:
 ```json
 {
-  "mqtt-pass":"snappmqtt:thisisanicepassword",
+  "mqtt-pass":"someuser:thisisanicepassword",
   "mqtt-conf":"port 9883\nallow_anonymous false\nallow_zero_length_clientid true\npassword_file /etc/mosquitto/pass.txt\nsys_interval 60\npersistence true\nmax_packet_size 10240\nmax_keepalive 60\npersistent_client_expiration 1m\n",
   "mqtt-clean-cron":"0 6 * * *"
 }
